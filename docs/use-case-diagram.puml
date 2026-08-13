@@ -1,0 +1,92 @@
+@startuml
+title Vehicle Rental Management System - Use Case Diagram
+
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+
+actor Customer
+actor Renter
+actor Admin
+
+rectangle "Vehicle Rental Management System" {
+
+  ' Common
+  usecase "Login" as UC_Login
+  usecase "View Profile" as UC_Profile
+  usecase "Logout" as UC_Logout
+
+  ' Customer
+  usecase "View Available Vehicles" as UC_ViewAvailable
+  usecase "Search Vehicle" as UC_Search
+  usecase "Rent Vehicle" as UC_Rent
+  usecase "Calculate Rent" as UC_Calculate
+  usecase "Generate Bill" as UC_Bill
+  usecase "Return Vehicle" as UC_Return
+  usecase "View Rental" as UC_ViewRental
+  usecase "View Bill" as UC_ViewBill
+
+  ' Renter
+  usecase "Add Vehicle" as UC_AddVehicle
+  usecase "View My Vehicles" as UC_MyVehicles
+  usecase "Update Vehicle" as UC_UpdateVehicle
+  usecase "Remove Vehicle" as UC_RemoveVehicle
+  usecase "View My Rentals" as UC_MyRentals
+  usecase "View Earnings" as UC_Earnings
+
+  ' Admin
+  usecase "View All Users" as UC_AllUsers
+  usecase "View All Vehicles" as UC_AllVehicles
+  usecase "View All Rentals" as UC_AllRentals
+  usecase "View System Statistics" as UC_Stats
+}
+
+' =========================
+' Customer Associations
+' =========================
+Customer --> UC_Login
+Customer --> UC_Profile
+Customer --> UC_ViewAvailable
+Customer --> UC_Search
+Customer --> UC_Rent
+Customer --> UC_Return
+Customer --> UC_ViewRental
+Customer --> UC_ViewBill
+Customer --> UC_Logout
+
+' =========================
+' Renter Associations
+' =========================
+Renter --> UC_Login
+Renter --> UC_Profile
+Renter --> UC_AddVehicle
+Renter --> UC_MyVehicles
+Renter --> UC_UpdateVehicle
+Renter --> UC_RemoveVehicle
+Renter --> UC_MyRentals
+Renter --> UC_Earnings
+Renter --> UC_Logout
+
+' =========================
+' Admin Associations
+' =========================
+Admin --> UC_Login
+Admin --> UC_Profile
+Admin --> UC_AllUsers
+Admin --> UC_AllVehicles
+Admin --> UC_AllRentals
+Admin --> UC_Stats
+Admin --> UC_Logout
+
+' =========================
+' INCLUDE Relationships
+' =========================
+UC_Rent ..> UC_Calculate : <<include>>
+UC_Rent ..> UC_Bill : <<include>>
+
+' =========================
+' EXTEND Relationship
+' =========================
+UC_Search ..> UC_ViewAvailable : <<extend>>\n[customer chooses to search]
+
+@enduml
