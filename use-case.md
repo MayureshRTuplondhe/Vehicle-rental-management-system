@@ -1,4 +1,4 @@
-# Vehicle Rental System ΓÇö Use Case Specification
+# Vehicle Rental System customer Case Specification
 
 ## 1. System Overview
 
@@ -6,9 +6,9 @@ The **Vehicle Rental System** is a software system that manages vehicle rentals 
 
 The system supports three primary actors:
 
-- **Customer** ΓÇö searches and rents available vehicles, manages rentals, views bills, and returns vehicles.
-- **Renter** ΓÇö owns/lists vehicles for rental and monitors their rentals and earnings.
-- **Admin** ΓÇö monitors users, vehicles, rentals, and overall system statistics.
+- **Customer**  searches and rents available vehicles, manages rentals, views bills, and returns vehicles.
+- **Renter**  owns/lists vehicles for rental and monitors their rentals and earnings.
+- **Admin**  monitors users, vehicles, rentals, and overall system statistics.
 
 The main system component is the `VehicleRentalSystem`, which coordinates operations with internal repositories such as:
 
