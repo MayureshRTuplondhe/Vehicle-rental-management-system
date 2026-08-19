@@ -1,4 +1,13 @@
-# Vehicle Rental System Customer Case Specification
+<!-- # Vehicle-rental-management-system
+ TeamId - 34
+ Team-mates
+ 1.Parth Mhaskar - 20251501184 <br>
+ 2.Mayuresh Tuplondhe - 20251501169 <br>
+ 3.Parth Mhaske - 20251502021 <br>
+ 4.Abhishek Patil - 20251502002 <br>
+ 5.N Sai Praneeth - 20251502019 <br> -->
+ 
+# Vehicle Rental System — Use Case Specification
 
 ## 1. System Overview
 
@@ -6,9 +15,9 @@ The **Vehicle Rental System** is a software system that manages vehicle rentals 
 
 The system supports three primary actors:
 
-- **Customer**  searches and rents available vehicles, manages rentals, views bills, and returns vehicles.
-- **Renter**  owns/lists vehicles for rental and monitors their rentals and earnings.
-- **Admin**  monitors users, vehicles, rentals, and overall system statistics.
+- **Customer** — searches and rents available vehicles, manages rentals, views bills, and returns vehicles.
+- **Renter** — owns/lists vehicles for rental and monitors their rentals and earnings.
+- **Admin** — monitors users, vehicles, rentals, and overall system statistics.
 
 The main system component is the `VehicleRentalSystem`, which coordinates operations with internal repositories such as:
 
@@ -107,8 +116,8 @@ An administrator manages and monitors the overall system.
 
 ## Admin Use Cases
 
-| ID   | Use Case | Actor |
-|------|----------|-------|
+| ID | Use Case | Actor |
+|---|---|---|
 | A-01 | Login | Admin |
 | A-02 | View Profile | Admin |
 | A-03 | View All Users | Admin |

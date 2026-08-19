@@ -1,3 +1,13 @@
+<!-- # Vehicle-rental-management-system
+ TeamId - 34
+ Team-mates
+ 1.Parth Mhaskar - 20251501184 <br>
+ 2.Mayuresh Tuplondhe - 20251501169 <br>
+ 3.Parth Mhaske - 20251502021 <br>
+ 4.Abhishek Patil - 20251502002 <br>
+ 5.N Sai Praneeth - 20251502019 <br> -->
+
+
 ### Problem Statement: Vehicle Rental Service System
 
 Renting a vehicle can be difficult when **CUSTOMER** have to manually check which where are nearby car rental services, which vehicles are available, compare their prices, verify the insurace for accidental events, and keep track of their rental details.
@@ -9,29 +19,29 @@ At the same time, the person managing the rental service, known as the **ADMIN**
 The "Vehicle Rental Management System" is designed to make this process a lot easier. The system will have three types of users: Customer, Renter, and Admin. 
 
 ## CUSTOMER 
-1. Log in
-2. View their profile
-3. Check available vehicles
-4. Search for a vehicle
-5. Rent an available vehicle
-6. Return it
-7. View their rental details and bill
+* Log in
+* View their profile
+* Check available vehicles
+* Search for a vehicle
+* Rent an available vehicle
+* Return it
+* View their rental details and bill
 
 ## RENTER
-1. Log in
-2. Manage their profile
-3. Add vehicles
-4. View their vehicles
-5. Update vehicle information
-6. Remove available vehicles
-7. View the rentals and earnings related to their vehicles
+* Log in
+* Manage their profile
+* Add vehicles
+* View their vehicles
+* Update vehicle information
+* Remove available vehicles
+* View the rentals and earnings related to their vehicles
 
 ## ADMIN
-1. Responsible for monitoring the system
-2. View all active users
-3. View all vehicles(rented, or un rented)
-4. View all rental records. 
-5. View system statistics such as the total number of users, vehicles, rentals, and revenue made by the renter.
+* Responsible for monitoring the system
+* View all active users
+* View all vehicles(rented, or un rented)
+* View all rental records. 
+* View system statistics such as the total number of users, vehicles, rentals, and revenue made by the renter.
 
 ## RENTAL PROCESS
 When a customer rents a vehicle, the system will record the customer's credentials(driving licence, identification docuemnts, and travel detatails) along with rental information, calculate the rental cost according to the number of days and the vehicle's daily price, and generate a bill. The renting vehicle will be marked as rented until the customer returns it. The system will also prevent problems such as renting an already rented vehicle or removing a vehicle that is currently being rented.
