@@ -84,6 +84,6 @@ The sample uses a 12-week timeline. Exact dates for this project were not provid
 
 ## Project Time Schedule (12-Week Template)
 
-![Vehicle Rental Management System timeline](Vehicle_Rental_Timeline.png)
+![Vehicle Rental Management System timeline](docs/Vehicle_Rental_Timeline.png)
 
 *Figure 1: Vehicle Rental Management System timeline (week-based planning template).*
