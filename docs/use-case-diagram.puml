@@ -1,92 +1,76 @@
 @startuml
-title Vehicle Rental Management System - Use Case Diagram
-
+title Vehicle Rental Management System - Use-Case Diagram
 left to right direction
-skinparam packageStyle rectangle
-skinparam actorStyle awesome
 
-actor Customer
 actor Renter
+actor Customer
 actor Admin
 
 rectangle "Vehicle Rental Management System" {
+  usecase "Register as renter" as UC_RenterRegister
+  usecase "Add vehicle" as UC_AddVehicle
+  usecase "Remove vehicle" as UC_RemoveVehicle
+  usecase "View all vehicles" as UC_ViewAll
+  usecase "View available vehicles" as UC_ViewAvailable
 
-  ' Common
-  usecase "Login" as UC_Login
-  usecase "View Profile" as UC_Profile
-  usecase "Logout" as UC_Logout
+  usecase "Register as customer" as UC_CustomerRegister
+  usecase "Book vehicle" as UC_Book
+  usecase "View bookings" as UC_Bookings
+  usecase "Return vehicle" as UC_Return
+  usecase "Calculate standard bill" as UC_StandardBill
+  usecase "Calculate discounted bill" as UC_DiscountBill
+  usecase "Validate discount percentage" as UC_ValidateDiscount
+  usecase "Apply discount" as UC_ApplyDiscount
 
-  ' Customer
-  usecase "View Available Vehicles" as UC_ViewAvailable
-  usecase "Search Vehicle" as UC_Search
-  usecase "Rent Vehicle" as UC_Rent
-  usecase "Calculate Rent" as UC_Calculate
-  usecase "Generate Bill" as UC_Bill
-  usecase "Return Vehicle" as UC_Return
-  usecase "View Rental" as UC_ViewRental
-  usecase "View Bill" as UC_ViewBill
-
-  ' Renter
-  usecase "Add Vehicle" as UC_AddVehicle
-  usecase "View My Vehicles" as UC_MyVehicles
-  usecase "Update Vehicle" as UC_UpdateVehicle
-  usecase "Remove Vehicle" as UC_RemoveVehicle
-  usecase "View My Rentals" as UC_MyRentals
-  usecase "View Earnings" as UC_Earnings
-
-  ' Admin
-  usecase "View All Users" as UC_AllUsers
-  usecase "View All Vehicles" as UC_AllVehicles
-  usecase "View All Rentals" as UC_AllRentals
-  usecase "View System Statistics" as UC_Stats
+  usecase "View booked vehicles" as UC_ViewBooked
+  usecase "View registered renters" as UC_ViewRenters
+  usecase "View registered customers" as UC_ViewCustomers
+  usecase "Exit program" as UC_Exit
 }
 
-' =========================
-' Customer Associations
-' =========================
-Customer --> UC_Login
-Customer --> UC_Profile
-Customer --> UC_ViewAvailable
-Customer --> UC_Search
-Customer --> UC_Rent
-Customer --> UC_Return
-Customer --> UC_ViewRental
-Customer --> UC_ViewBill
-Customer --> UC_Logout
-
-' =========================
-' Renter Associations
-' =========================
-Renter --> UC_Login
-Renter --> UC_Profile
+Renter --> UC_RenterRegister
 Renter --> UC_AddVehicle
-Renter --> UC_MyVehicles
-Renter --> UC_UpdateVehicle
 Renter --> UC_RemoveVehicle
-Renter --> UC_MyRentals
-Renter --> UC_Earnings
-Renter --> UC_Logout
+Renter --> UC_ViewAll
+Renter --> UC_ViewAvailable
 
-' =========================
-' Admin Associations
-' =========================
-Admin --> UC_Login
-Admin --> UC_Profile
-Admin --> UC_AllUsers
-Admin --> UC_AllVehicles
-Admin --> UC_AllRentals
-Admin --> UC_Stats
-Admin --> UC_Logout
+Customer --> UC_CustomerRegister
+Customer --> UC_ViewAll
+Customer --> UC_ViewAvailable
+Customer --> UC_Book
+Customer --> UC_Bookings
+Customer --> UC_Return
+Customer --> UC_StandardBill
+Customer --> UC_DiscountBill
 
-' =========================
-' INCLUDE Relationships
-' =========================
-UC_Rent ..> UC_Calculate : <<include>>
-UC_Rent ..> UC_Bill : <<include>>
+Admin --> UC_ViewAll
+Admin --> UC_ViewAvailable
+Admin --> UC_ViewBooked
+Admin --> UC_ViewRenters
+Admin --> UC_ViewCustomers
 
-' =========================
-' EXTEND Relationship
-' =========================
-UC_Search ..> UC_ViewAvailable : <<extend>>\n[customer chooses to search]
+UC_DiscountBill ..> UC_StandardBill : <<include>>
+UC_DiscountBill ..> UC_ValidateDiscount : <<include>>
+UC_DiscountBill ..> UC_ApplyDiscount : <<include>>
 
+Renter --> UC_Exit
+Customer --> UC_Exit
+Admin --> UC_Exit
+
+note right of UC_Book
+  The menu requires rental days > 0.
+  The database currently checks that the vehicle ID exists,
+  but does not check availability before marking it rented.
+end note
+
+note bottom of UC_ViewRenters
+  Admin functionality is a menu in main(), not an authenticated
+  admin account. Registration and all records are in-memory only.
+  The admin menu is read directly with cin in the source.
+end note
+
+note bottom of UC_DiscountBill
+  Discount percentage must be between 0 and 100 inclusive.
+  Missing vehicle or invalid percentage produces no bill.
+end note
 @enduml

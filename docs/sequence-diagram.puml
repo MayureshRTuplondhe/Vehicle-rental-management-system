@@ -1,0 +1,161 @@
+@startuml
+title Vehicle Rental Management System - Sequence Diagram
+autonumber
+
+actor Renter
+actor Customer
+actor Admin
+participant "main() / terminal menus" as UI
+participant "renter or customer object" as UserObject
+participant "database db" as DB
+participant "Vehicle in vehicleList" as Vehicle
+participant "database::Discount" as Discount
+
+note over UI,DB
+  The program is a synchronous, in-memory menu application.
+  main() registers users and dispatches their menu choices.
+  bookVehicle_D_ExceptionHandling() is implemented, but the
+  customer menu calls bookVehicle_D() instead.
+  readInt()/readDouble() retry invalid numeric input and exit
+  cleanly on EOF.
+end note
+
+group Renter registration and vehicle management
+  Renter -> UI: Select renter; enter ID, name, phone
+  UI -> UserObject: construct renter(id, name, phone, db)
+  UI -> UI: append to renterList
+
+  alt Add vehicle
+    Renter -> UI: Select Add; enter name, price, vehicle ID
+    UI -> UserObject: addVehicle(name, price, id, true)
+    UserObject -> DB: addVehicle(name, price, id, true)
+    DB -> DB: increment vehicleCount
+    DB -> Vehicle: construct Vehicle(name, price, id, true)
+    DB -> DB: append Vehicle to vehicleList
+    UI --> Renter: Vehicle Added Successfully
+  else Remove vehicle
+    Renter -> UI: Select Remove; enter vehicle ID
+    UI -> UserObject: removeVehicle(id)
+    UserObject -> DB: removeVehicle(id)
+    alt Matching vehicle found
+      DB -> DB: erase matching entry; decrement vehicleCount
+    else No matching vehicle
+      DB --> UI: print Vehicle Not Found
+    end
+  else List vehicles
+    Renter -> UI: Select Show All or Show Available
+    UI -> UserObject: showVehicles_R() or showAvailable_R()
+    UserObject -> DB: showVehicle_D() or showAvailableVehicle_D()
+    DB -> Vehicle: print all, or only isAvailable() vehicles
+    UI --> Renter: Display matching vehicles
+  end
+end
+
+group Admin panel (no admin object or authentication in source)
+  Admin -> UI: Select Admin Panel
+  loop Until admin selects Back
+    alt Show all vehicles
+      Admin -> UI: Select Show All Vehicles
+      UI -> UI: showVehicleListToAdmin(db)
+      UI -> DB: read vehicleList (friend function access)
+      DB -> Vehicle: print every vehicle
+      UI --> Admin: Display vehicle list
+    else Show available vehicles
+      Admin -> UI: Select Show Available Vehicles
+      UI -> DB: showAvailableVehicle_D()
+      DB -> Vehicle: filter by isAvailable(); print matches
+      UI --> Admin: Display available vehicles
+    else Show booked vehicles
+      Admin -> UI: Select Show Booked Vehicles
+      UI -> DB: showBooking_D()
+      DB -> Vehicle: print vehicles where !isAvailable()
+      UI --> Admin: Display booked vehicles
+    else Show registered renters
+      Admin -> UI: Select Show All Renters
+      UI -> UI: iterate renterList; displayUser()
+      UI --> Admin: Display renter details or empty-list message
+    else Show registered customers
+      Admin -> UI: Select Show All Customers
+      UI -> UI: iterate customerList; displayUser()
+      UI --> Admin: Display customer details or empty-list message
+    end
+  end
+end
+
+group Customer registration and vehicle rental
+  Customer -> UI: Select customer; enter ID, name, phone, license
+  UI -> UserObject: construct customer(name, id, phone, license, db)
+  UI -> UI: append to customerList
+
+  alt View all or available vehicles
+    Customer -> UI: Select Show All or Show Available
+    UI -> UserObject: showVehicles_C() or showAvailableVehicles_C()
+    UserObject -> DB: showVehicle_D() or showAvailableVehicle_D()
+    DB -> Vehicle: print all, or only isAvailable() vehicles
+    UI --> Customer: Display matching vehicles
+  else Book vehicle
+    Customer -> UI: Select Book; enter vehicle ID and rental days
+    alt rental days > 0
+      UI -> UserObject: bookVehicles_C(id, days)
+      UserObject -> DB: bookVehicle_D(id, days)
+      alt Matching vehicle ID found
+        DB -> Vehicle: markRented()
+        DB -> Vehicle: setRentedDay(days)
+        UI --> Customer: Vehicle Booked
+      else No matching vehicle ID
+        DB --> UI: print Vehicle Not Found
+      end
+    else rental days <= 0
+      UI --> Customer: Days must be greater than zero
+    end
+    note over UI,DB
+      bookVehicle_D checks only whether the ID exists;
+      it does not reject a vehicle already marked rented.
+    end note
+  else View bookings
+    Customer -> UI: Select Show Bookings
+    UI -> UserObject: showBookings_C()
+    UserObject -> DB: showBooking_D()
+    DB -> Vehicle: print vehicles where !isAvailable()
+    UI --> Customer: Display booked vehicles
+  else Calculate standard bill
+    Customer -> UI: Select Calculate Bill; enter vehicle ID
+    UI -> UserObject: showBill(id)
+    UserObject -> DB: showBill_D(id)
+    DB -> Vehicle: find vehicle; getPricePerDay() * getRentedDay()
+    alt Vehicle found
+      DB --> UserObject: bill
+      UserObject --> Customer: Display total bill
+    else Vehicle not found
+      DB --> Customer: Print not found; return -1
+    end
+  else Calculate bill with discount
+    Customer -> UI: Select Discounted Bill; enter ID and percentage
+    UI -> UserObject: showBill(id, discountPercent)
+    UserObject -> DB: showBill_D(id, discountPercent)
+    DB -> DB: calculate undiscounted bill
+    alt Vehicle found and percentage is 0..100
+      DB -> Discount: applyDiscount(bill, discountPercent)
+      Discount --> DB: discounted bill
+      DB --> UserObject: discounted bill
+      UserObject --> Customer: Display final bill
+    else Invalid percentage
+      DB --> Customer: Print invalid discount; return -1
+    else Vehicle not found
+      DB --> Customer: Print not found; return -1
+    end
+  else Return vehicle
+    Customer -> UI: Select Return; enter vehicle ID
+    UI -> UserObject: returnVehicle_C(id)
+    UserObject -> DB: returnVehicle_D(id)
+    alt Matching vehicle ID found
+      DB -> Vehicle: markAvailable()
+      DB -> Vehicle: setRentedDay(0)
+      UI --> Customer: Vehicle Returned
+    else No matching vehicle ID
+      DB --> UI: print Vehicle Not Found
+    end
+  end
+end
+
+@enduml

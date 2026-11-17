@@ -1,0 +1,119 @@
+@startuml
+title Vehicle Rental Management System - Object Diagram
+skinparam objectAttributeIconSize 0
+
+object "db : database" as db {
+  vehicleCount = 6 (static)
+  vehicleList = six seeded vehicles
+}
+
+object "vehicle101 : Vehicle" as v101 {
+  vehicle_name = "Honda City"
+  vehicle_price = 2500.0
+  vehicle_id = 101
+  vehicle_available = false
+  vehicle_rentedDay = 3
+}
+
+object "vehicle102 : Vehicle" as v102 {
+  vehicle_name = "Hyundai Creta"
+  vehicle_price = 3200.0
+  vehicle_id = 102
+  vehicle_available = true
+  vehicle_rentedDay = 0
+}
+
+object "vehicle103 : Vehicle" as v103 {
+  vehicle_name = "Maruti Swift"
+  vehicle_price = 1800.0
+  vehicle_id = 103
+  vehicle_available = true
+  vehicle_rentedDay = 0
+}
+
+object "vehicle104 : Vehicle" as v104 {
+  vehicle_name = "Toyota Innova"
+  vehicle_price = 4500.0
+  vehicle_id = 104
+  vehicle_available = true
+  vehicle_rentedDay = 0
+}
+
+object "vehicle105 : Vehicle" as v105 {
+  vehicle_name = "Royal Enfield Classic 350"
+  vehicle_price = 1200.0
+  vehicle_id = 105
+  vehicle_available = true
+  vehicle_rentedDay = 0
+}
+
+object "vehicle106 : Vehicle" as v106 {
+  vehicle_name = "Activa 6G"
+  vehicle_price = 600.0
+  vehicle_id = 106
+  vehicle_available = true
+  vehicle_rentedDay = 0
+}
+
+object "customer1 : customer" as c1 {
+  name = "Sample Customer"
+  id = 201
+  phone = 900000001
+  drivingLicenseNo = "DL-SAMPLE"
+  db = db
+}
+
+object "renter1 : renter" as r1 {
+  name = "Sample Renter"
+  id = 301
+  phone = 900000002
+  db = db
+}
+
+object "customerList : vector of customer" as customerList {
+  size = 1
+}
+
+object "renterList : vector of renter" as renterList {
+  size = 1
+}
+
+db *-- v101 : vehicleList
+db *-- v102 : vehicleList
+db *-- v103 : vehicleList
+db *-- v104 : vehicleList
+db *-- v105 : vehicleList
+db *-- v106 : vehicleList
+c1 --> db : db reference
+r1 --> db : db reference
+customerList *-- c1
+renterList *-- r1
+
+note top of db
+  Example in-memory snapshot after startup
+  and a customer books vehicle 101 for 3 days.
+  Vehicles 101-106 are the exact seeded sample
+  inventory. User values are illustrative.
+  vehicleCount is static and shared by databases.
+end note
+
+note bottom of v101
+  Booking sets availability false and rented days to 3.
+  This sample shows the state after a successful booking.
+end note
+
+note bottom of customerList
+  main() owns these vectors for the current run.
+  No data is persisted after program exit.
+end note
+
+note right of r1
+  Renter registration is independent of vehicle ownership:
+  renters and customers share the same database.
+end note
+
+note bottom
+  No admin object is present in the implementation.
+  The admin menu is handled directly by main().
+end note
+@enduml

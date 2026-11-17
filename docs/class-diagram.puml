@@ -1,0 +1,142 @@
+@startuml
+title Vehicle Rental Management System - Class Diagram
+skinparam classAttributeIconSize 0
+hide empty members
+
+abstract class user {
+  # name : string
+  # id : int
+  # phone : int
+  + user(id : int, name : string, phone : int)
+  + {abstract} displayUser() : void
+  + ~user()
+}
+
+class renter {
+  - db : database&
+  + renter(id : int, name : string, phone : int, db : database&)
+  + renter(u : const UserInfo&)
+  + displayUser() : void
+  + showVehicles_R() : void
+  + showAvailable_R() : void
+  + addVehicle(name : string, price : double, id : int, available : bool) : void
+  + removeVehicle(vehicle_id : int) : void
+}
+
+class customer {
+  # drivingLicenseNo : string
+  # db : database&
+  + customer(name : string, id : int, phone : int, license : string, db : database&)
+  + customer(u : const UserInfo&)
+  + displayUser() : void
+  + showVehicles_C() : void
+  + showAvailableVehicles_C() : void
+  + bookVehicles_C(id : int, day : int) : void
+  + showBookings_C() : void
+  + returnVehicle_C(id : int) : void
+  + showBill(id : int) : void
+  + showBill(id : int, discountPercent : double) : void
+}
+
+class admin {
+  + admin(id : int, name : string, phone : int)
+  + displayUser() : void
+}
+
+class Vehicle {
+  - vehicle_name : string
+  - vehicle_price : double
+  - vehicle_id : int
+  - vehicle_available : bool
+  - vehicle_rentedDay : int = 0
+  + Vehicle(name : string, price : double, id : int, available : bool)
+  + Vehicle(price : double)
+  + markRented() : void
+  + markAvailable() : void
+  + displayVehicle() : void
+  + isAvailable() : bool
+  + getPricePerDay() : double
+  + getVehicleId() : int
+  + getVehicleName() : string
+  + setRentedDay(day : int) : void
+  + getRentedDay() : int
+  + operator double() : double
+}
+
+class database {
+  - vehicleList : vector<Vehicle>
+  - {static} vehicleCount : int
+  + addVehicle(name : string, price : double, id : int, available : bool) : void
+  + removeVehicle(id : int) : void
+  + showVehicle_D() : void
+  + showAvailableVehicle_D() : void
+  + bookVehicle_D(id : int, day : int) : void
+  + bookVehicle_D_ExceptionHandling(id : int, day : int) : void
+  + showBooking_D() : void
+  + returnVehicle_D(id : int) : void
+  + showBill_D(id : int) : double
+  + showBill_D(id : int, discountPercent : double) : double
+}
+
+class "database::Discount" as Discount {
+  + applyDiscount<T>(bill : T, percentage : T) : T
+}
+
+class UserInfo {
+  + name : string
+  + id : int
+  + phone : int
+  + role : string
+  + db : database*
+  + license : string
+  + UserInfo(i : int, n : string, p : int, d : database&, userRole : string = "", lic : string = "")
+  + display() : void
+}
+
+class "Free functions and friend operators" as TerminalRun <<module>> {
+  + main() : int
+  + readInt(prompt : const string&) : int
+  + readDouble(prompt : const string&) : double
+  + showVehicleListToAdmin(db : database&) : void
+  + operator<<(out : ostream&, v : const Vehicle&) : ostream&
+  + operator<<(out : ostream&, r : const renter&) : ostream&
+  + operator<<(out : ostream&, c : const customer&) : ostream&
+}
+
+user <|-- renter
+user <|-- customer
+user <|-- admin
+database "1" *-- "0..*" Vehicle : vehicleList
+renter "0..*" --> "1" database : db reference
+customer "0..*" --> "1" database : db reference
+UserInfo ..> database : stores db pointer
+renter ..> UserInfo : converting constructor
+customer ..> UserInfo : converting constructor
+database ..> Discount : uses for discounted bill
+TerminalRun ..> database : owns in main()
+TerminalRun ..> renter : stores vector<renter>
+TerminalRun ..> customer : stores vector<customer>
+TerminalRun ..> Vehicle : sample inventory
+
+note right of admin
+  Class and displayUser() override are declared final.
+  main() does not construct an admin object; its panel
+  directly reads the database and displays renter/customer
+  vectors. This class is implemented but unused by main().
+end note
+
+note bottom of database
+  vehicleCount is static. Discount is a nested type,
+  not a stored database member. The regular menu calls
+  bookVehicle_D; the exception-handling variant exists
+  but is not called from main().
+end note
+
+note bottom of TerminalRun
+  This groups free functions, not a C++ class. The three
+  operator<< overloads are friend free functions, as is
+  showVehicleListToAdmin with respect to database. main()
+  seeds six vehicles, maintains in-memory renter and customer
+  vectors, and dispatches role menus.
+end note
+@enduml
