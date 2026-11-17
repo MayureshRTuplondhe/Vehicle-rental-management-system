@@ -82,41 +82,13 @@ class "database::Discount" as Discount {
   + applyDiscount<T>(bill : T, percentage : T) : T
 }
 
-class UserInfo {
-  + name : string
-  + id : int
-  + phone : int
-  + role : string
-  + db : database*
-  + license : string
-  + UserInfo(i : int, n : string, p : int, d : database&, userRole : string = "", lic : string = "")
-  + display() : void
-}
-
-class "Free functions and friend operators" as TerminalRun <<module>> {
-  + main() : int
-  + readInt(prompt : const string&) : int
-  + readDouble(prompt : const string&) : double
-  + showVehicleListToAdmin(db : database&) : void
-  + operator<<(out : ostream&, v : const Vehicle&) : ostream&
-  + operator<<(out : ostream&, r : const renter&) : ostream&
-  + operator<<(out : ostream&, c : const customer&) : ostream&
-}
-
 user <|-- renter
 user <|-- customer
 user <|-- admin
 database "1" *-- "0..*" Vehicle : vehicleList
 renter "0..*" --> "1" database : db reference
 customer "0..*" --> "1" database : db reference
-UserInfo ..> database : stores db pointer
-renter ..> UserInfo : converting constructor
-customer ..> UserInfo : converting constructor
 database ..> Discount : uses for discounted bill
-TerminalRun ..> database : owns in main()
-TerminalRun ..> renter : stores vector<renter>
-TerminalRun ..> customer : stores vector<customer>
-TerminalRun ..> Vehicle : sample inventory
 
 note right of admin
   Class and displayUser() override are declared final.
@@ -132,11 +104,4 @@ note bottom of database
   but is not called from main().
 end note
 
-note bottom of TerminalRun
-  This groups free functions, not a C++ class. The three
-  operator<< overloads are friend free functions, as is
-  showVehicleListToAdmin with respect to database. main()
-  seeds six vehicles, maintains in-memory renter and customer
-  vectors, and dispatches role menus.
-end note
 @enduml
