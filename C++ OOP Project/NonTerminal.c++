@@ -49,6 +49,7 @@ public:
         cout << "----------------------------" << endl;
     }
 
+    // operator overloading
     friend ostream &operator<<(ostream &out, const Vehicle &v)
     {
         out << "----------------------------" << endl;
@@ -97,12 +98,14 @@ class database
 private:
     vector<Vehicle> vehicleList;
     static int vehicleCount;
+    // friend function
     friend void showVehicleListToAdmin(database &db);
 
 public:
     class Discount // nested
     {
     public:
+        // template
         template <typename T>
         T applyDiscount(T bill, T percentage)
         {
@@ -203,7 +206,7 @@ public:
         }
         catch (int a)
         {
-            cout<<"Error "<<a;
+            cout << "Error " << a;
             cout << "Vehicle Not Found!!!";
         }
     }
@@ -306,7 +309,6 @@ public:
         cout << "Phone: " << phone << endl;
         cout << "ID: " << id << endl;
     }
-    // virtual void display() =0;
 };
 
 class user
@@ -319,7 +321,15 @@ public:
     user(int id, string name, int phone)
         : id(id), name(name), phone(phone) {}
 
-    virtual void displayUser() = 0;
+    // abstract class
+    // virtual void displayUser() = 0;
+
+    virtual void displayUser(){
+        cout << "Role: User\n"
+             << "ID: " << id << "\n"
+             << "Name: " << name << "\n"
+             << "Phone: " << phone << "\n";
+    }
 
     virtual ~user() = default;
 };
@@ -335,6 +345,7 @@ public:
     {
     }
 
+    //constructor overload
     renter(const UserInfo &u)
         : user(u.id, u.name, u.phone), db(*u.db)
     {
@@ -400,6 +411,12 @@ public:
     customer(string name, int id, int phone, string license, database &db) : user(id, name, phone), db(db)
     {
         drivingLicenseNo = license;
+    }
+
+    customer(string name, int id, int phone, database &db)
+        : user(id, name, phone), db(db)
+    {
+        drivingLicenseNo = "";
     }
 
     customer(const UserInfo &u) : user(u.id, u.name, u.phone),
@@ -489,32 +506,44 @@ int main()
     // cout << r;
 
     // Class -> Basic
-    Vehicle v1("Toyota", 1500, 101, true);
-    double price = v1;
-    cout << price;
-    cout << endl;
+    // Vehicle v1("Toyota", 1500, 101, true);
+    // double price = v1;
+    // cout << price;
+    // cout << endl;
 
-    double value = 2000;
-    Vehicle v2 = value;
-    v2.displayVehicle();
-    cout << endl;
+    // double value = 2000;
+    // Vehicle v2 = value;
+    // v2.displayVehicle();
+    // cout << endl;
 
-    // Template function
-    database::Discount d;
-    double b1 = d.applyDiscount(7500, 55);
-    double b2 = d.applyDiscount(75.5, 4.23);
-    cout << b1 << endl
-         << b2;
+    // // Template function
+    // database::Discount d;
+    // double b1 = d.applyDiscount(7500, 55);
+    // double b2 = d.applyDiscount(75.5, 4.23);
+    // cout << b1 << endl
+    //      << b2;
 
-    // class to class typecasting
-    UserInfo u1(101, "Parth", 960, db, "Renter");
-    UserInfo u2(102, "Rahul", 987654, db, "Customer");
+    // // class to class typecasting
+    // UserInfo u1(101, "Parth", 960, db, "Renter");
+    // UserInfo u2(102, "Rahul", 987654, db, "Customer");
 
-    renter r2 = u1;
-    customer c2 = u2;
+    // renter r2 = u1;
+    // customer c2 = u2;
 
-    cout << r2;
-    cout << c2;
+    // cout << r2;
+    // cout << c2;
 
+    //object slicling
+    customer parth("parth", 2021, 960, db);
+    parth.displayUser();
+    cout<<endl<<"--------";
+
+    user praneeth(2019, "praneeth", 520);
+    praneeth.displayUser();
+    cout<<endl<<"--------";
+
+    praneeth = parth;
+
+    praneeth.displayUser();
     return 0;
 }
