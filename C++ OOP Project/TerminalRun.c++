@@ -327,29 +327,6 @@ void showVehicleListToAdmin(database &db)
     }
 }
 
-class UserInfo
-{
-public:
-    string name;
-    int id;
-    int phone;
-    string role;
-    database *db;
-    string license;
-
-    UserInfo(int i, string n, int p, database &d,
-             string userRole = "", string lic = "")
-        : name(n), id(i), phone(p), role(userRole), db(&d), license(lic) {}
-
-    void display()
-    {
-        cout << "Role: " << role << endl;
-        cout << "Name: " << name << endl;
-        cout << "Phone: " << phone << endl;
-        cout << "ID: " << id << endl;
-    }
-};
-
 class user
 {
 protected:
@@ -373,11 +350,6 @@ private:
 public:
     renter(int id, string name, int phone, database &db)
         : user(id, name, phone), db(db)
-    {
-    }
-
-    renter(const UserInfo &u)
-        : user(u.id, u.name, u.phone), db(*u.db)
     {
     }
 
@@ -442,11 +414,7 @@ public:
     {
         drivingLicenseNo = license;
     }
-
-    customer(const UserInfo &u) : user(u.id, u.name, u.phone),
-                                  drivingLicenseNo(u.license), db(*u.db)
-    {
-    }
+    
     void displayUser() override
     {
         cout << "Role :" << "Customer\n";
